@@ -1,0 +1,9 @@
+obj/
+release/
+src/lib
+src/include/SDL2*
+src/assets/fonts
+
+*.dll
+*.exe
+*.7z
