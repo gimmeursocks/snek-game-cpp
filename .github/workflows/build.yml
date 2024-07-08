@@ -27,6 +27,6 @@ jobs:
           make clean
           make
 
-      - name: Running
+      - name: Build release
         run: |
-          make run
+          make release

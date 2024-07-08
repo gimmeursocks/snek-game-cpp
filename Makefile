@@ -1,6 +1,8 @@
 CXX = g++
 CXXFLAGS = -I src/include -L src/lib -O2 -Wall -Wextra -std=c++20
-RFLAGS = -DNDEBUG -mwindows -m64
+
+WIN_RFLAGS = -DNDEBUG -mwindows -m64
+LINUX_RFLAGS = -DNDEBUG -m64
 
 TARGET = main
 RELEASE_TARGET = snek
@@ -16,8 +18,10 @@ LINUX_LIBS = -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
+	RFLAGS = $(LINUX_RFLAGS)
 	LIBS = $(LINUX_LIBS)
 else
+	RFLAGS = $(WIN_RFLAGS)
 	LIBS = $(WIN_LIBS)
 endif
 
