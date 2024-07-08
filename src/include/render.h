@@ -2,10 +2,6 @@
 
 #include "font.h"
 
-extern const int WINDOW_WIDTH, WINDOW_HEIGHT;
-extern const int TBPADDING, RLPADDING;
-extern const int GRID_WIDTH, GRID_HEIGHT;
-
 enum TextureAnchor {
     TOP_LEFT,
     TOP_RIGHT,
@@ -27,12 +23,15 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     int SDL_Fail();
+    int IMG_Fail();
+    int setIcon();
 
 public:
     ~RenderWindow();
     int init();
     void clear();
     void display();
+    void scale();
     SDL_Renderer *getRenderer();
     void renderTextureInPosition(TextureInfo *, TextureAnchor);
     void setColor(SDL_Color);

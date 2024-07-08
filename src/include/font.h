@@ -4,10 +4,6 @@
 #include <string>
 #include <unordered_map>
 
-extern const char *fontFile;
-extern const int fontSize;
-extern const SDL_Color textColor;
-
 struct TextureInfo {
     SDL_Texture *texture;
     SDL_FRect rect;

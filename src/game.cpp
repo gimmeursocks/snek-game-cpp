@@ -1,9 +1,9 @@
 #include "game.h"
 #include "logger.h"
 #include "snake.h"
+#include "constants.h"
 #include <format>
 
-const SDL_Rect collider = {RLPADDING, TBPADDING, WINDOW_WIDTH - 2 * RLPADDING, WINDOW_HEIGHT - 2 * TBPADDING};
 Snake snake;
 
 int Game::init() {
@@ -125,7 +125,7 @@ void Game::update() {
         font.renderScoreCounter(&scoreCounterTexture, score);
     }
 
-    if (currentTime > lastDirTime + MOVE_INTERVAL) {
+    if (currentTime > lastDirTime + INPUT_INTERVAL) {
 
         lastDirTime = currentTime;
 
@@ -150,7 +150,7 @@ void Game::update() {
         if (snake.checkSelfCollision()) {
             endGame();
         } else {
-            window.wrapAround(snake.head, collider);
+            window.wrapAround(snake.head, COLLIDER);
             if (snake.checkFoodCollision()) {
                 score++;
                 snake.grow();
@@ -160,7 +160,9 @@ void Game::update() {
 }
 
 void Game::render() {
+    window.scale();    
     window.clear();
+
     if (mainMenu) {
         window.renderTextureInPosition(font.getCache(TITLE), CENTER);
         window.renderTextureInPosition(font.getCache(START), BOTTOM_LEFT);
@@ -177,9 +179,9 @@ void Game::render() {
         if (scoreCounterTexture) {
             window.renderTextureInPosition(scoreCounterTexture, BOTTOM_RIGHT);
         }
-        window.setColor(textColor);
+        window.setColor(TEXT_COLOR);
         window.renderSnake(snake);
-        window.renderRect(collider);
+        window.renderRect(COLLIDER);
         window.renderFood(snake.food);
     }
 

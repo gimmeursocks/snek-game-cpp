@@ -4,8 +4,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-extern const SDL_Rect collider;
-
 enum Direction {
     NONE,
     UP,
@@ -29,8 +27,6 @@ private:
     int lastFrameTime = 0;
     int lastDirTime = 0;
     int lastMoveTime = 0;
-    const int MOVE_INTERVAL = 160;
-    const int MOVE_SPEED = 150;
     TextureInfo *fpsCounterTexture = nullptr;
     TextureInfo *scoreCounterTexture = nullptr;
     TextureInfo *scoreMessageTexture = nullptr;

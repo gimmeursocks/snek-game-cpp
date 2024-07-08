@@ -1,5 +1,6 @@
 #include "snake.h"
 #include "logger.h"
+#include "constants.h"
 #include <algorithm>
 #include <format>
 #include <random>
@@ -13,8 +14,8 @@ bool Point::operator==(const Point &other) const {
 
 Point Point::randomPoint() {
 
-    int maxX = collider.w / GRID_WIDTH;
-    int maxY = collider.h / GRID_HEIGHT;
+    int maxX = COLLIDER.w / GRID_WIDTH;
+    int maxY = COLLIDER.h / GRID_HEIGHT;
 
     std::uniform_int_distribution<int> distributionX(0, maxX - 1);
     std::uniform_int_distribution<int> distributionY(0, maxY - 1);

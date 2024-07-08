@@ -1,36 +1,57 @@
 #include "render.h"
+#include "constants.h"
 #include "logger.h"
 #include "snake.h"
+#include <SDL2/SDL_image.h>
 #include <format>
-
-const int WINDOW_WIDTH = 1280;
-const int WINDOW_HEIGHT = 720;
-const int TBPADDING = 60;
-const int RLPADDING = 10;
-const int GRID_HEIGHT = 30;
-const int GRID_WIDTH = 30;
 
 int RenderWindow::SDL_Fail() {
     Logger::LogError(SDL_GetError());
     return EXIT_FAILURE;
 }
 
-int RenderWindow::init() {
+int RenderWindow::IMG_Fail() {
+    Logger::LogError(IMG_GetError());
+    return EXIT_FAILURE;
+}
 
+int RenderWindow::setIcon() {
+    SDL_Surface *icon = IMG_Load(ICON_SRC);
+    if (!icon) {
+        return IMG_Fail();
+    }
+    SDL_SetWindowIcon(this->window, icon);
+    SDL_FreeSurface(icon);
+
+    Logger::LogInfo("Icon loaded successfully!");
+    return EXIT_SUCCESS;
+}
+
+int RenderWindow::init() {
     SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "system");
 
     if (SDL_Init(SDL_INIT_VIDEO)) {
         return SDL_Fail();
     }
 
-    this->window = SDL_CreateWindow("Snek", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
+    this->window = SDL_CreateWindow(GAME_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!this->window) {
         return SDL_Fail();
     }
 
+    SDL_SetWindowMinimumSize(this->window, WINDOW_WIDTH, WINDOW_HEIGHT);
+
     this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!this->renderer) {
         return SDL_Fail();
+    }
+
+    if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
+        return IMG_Fail();
+    }
+
+    if (setIcon() != 0) {
+        return IMG_Fail();
     }
 
     Logger::LogInfo("Application started successfully!");
@@ -38,12 +59,29 @@ int RenderWindow::init() {
 }
 
 void RenderWindow::clear() {
-    SDL_SetRenderDrawColor(this->renderer, 100, 20, 30, 255);
+    setColor(BACKGROUND_COLOR);
     SDL_RenderClear(this->renderer);
 }
 
 void RenderWindow::display() {
     SDL_RenderPresent(this->renderer);
+}
+
+void RenderWindow::scale() {
+    int currWindowWidth, currWindowHeight;
+    SDL_GetWindowSize(this->window, &currWindowWidth, &currWindowHeight);
+
+    float scaleX = (float)currWindowWidth / WINDOW_WIDTH;
+    float scaleY = (float)currWindowHeight / WINDOW_HEIGHT;
+    float scale = std::min(scaleX, scaleY);
+
+    int offsetX = (currWindowWidth - WINDOW_WIDTH * scale) / 2;
+    int offsetY = (currWindowHeight - WINDOW_HEIGHT * scale) / 2;
+
+    SDL_Rect viewport = {offsetX, offsetY, static_cast<int>(WINDOW_WIDTH * scale), static_cast<int>(WINDOW_HEIGHT * scale)};
+
+    SDL_RenderSetScale(this->renderer, scale, scale);
+    SDL_RenderSetViewport(this->renderer, &viewport);
 }
 
 SDL_Renderer *RenderWindow::getRenderer() {
@@ -119,23 +157,23 @@ void RenderWindow::renderFillRect(const SDL_Rect &rect) {
     SDL_RenderFillRect(this->renderer, &rect);
 }
 
-void RenderWindow::wrapAround(Point &object, const SDL_Rect &collider) {
+void RenderWindow::wrapAround(Point &object, const SDL_Rect &COLLIDER) {
     if (object.x < RLPADDING) {
-        object.x = collider.w - GRID_WIDTH + RLPADDING;
-    } else if (object.x + GRID_WIDTH > (collider.w + RLPADDING)) {
+        object.x = COLLIDER.w - GRID_WIDTH + RLPADDING;
+    } else if (object.x + GRID_WIDTH > (COLLIDER.w + RLPADDING)) {
         object.x = RLPADDING;
     }
 
     if (object.y < TBPADDING) {
-        object.y = collider.h - GRID_HEIGHT + TBPADDING;
-    } else if (object.y + GRID_HEIGHT > (collider.h + TBPADDING)) {
+        object.y = COLLIDER.h - GRID_HEIGHT + TBPADDING;
+    } else if (object.y + GRID_HEIGHT > (COLLIDER.h + TBPADDING)) {
         object.y = TBPADDING;
     }
 }
 
 void RenderWindow::renderSnake(Snake &snake) {
     renderSnakeBody(snake.head);
-    for (auto& segment : snake.segments) {
+    for (auto &segment : snake.segments) {
         renderSnakeBody(segment);
     }
 }
@@ -146,8 +184,8 @@ void RenderWindow::renderSnakeBody(Point &body) {
 }
 
 void RenderWindow::renderFood(Food &food) {
-    setColor({255, 127, 156, 255});
+    setColor(FOOD_COLOR);
     SDL_Rect foodRect = {food.position.x, food.position.y, GRID_WIDTH, GRID_HEIGHT};
     renderFillRect(foodRect);
-    setColor({255, 255, 255, 255});
+    setColor(TEXT_COLOR);
 }

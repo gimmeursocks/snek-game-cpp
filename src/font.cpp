@@ -1,10 +1,8 @@
 #include "font.h"
+#include "constants.h"
 #include "font_data.h"
 #include "logger.h"
 #include <sstream>
-
-const int fontSize = 22;
-const SDL_Color textColor = {255, 255, 255, 255};
 
 int Font::TTF_Fail() {
     Logger::LogError(TTF_GetError());
@@ -12,14 +10,13 @@ int Font::TTF_Fail() {
 }
 
 int Font::init(SDL_Renderer *renderer) {
-
     this->renderer = renderer;
     if (TTF_Init() != 0) {
         return TTF_Fail();
     }
 
     SDL_RWops *rw = SDL_RWFromConstMem(font_ttf, sizeof(font_ttf));
-    this->font = TTF_OpenFontRW(rw, 1, fontSize);
+    this->font = TTF_OpenFontRW(rw, 1, FONT_SIZE);
     if (!this->font) {
         return TTF_Fail();
     }
@@ -41,11 +38,10 @@ Font::~Font() {
 }
 
 void Font::cacheInit() {
-    SDL_Color textColor = {255, 255, 255, 255};
-    this->textCache[TITLE] = this->textToTexture("Snek", textColor);
-    this->textCache[START] = this->textToTexture("'SPACE' to start", textColor);
-    this->textCache[WASD] = this->textToTexture("use 'WASD' to control", textColor);
-    this->textCache[QUIT_OR_RESTART] = this->textToTexture("'q' to quit, 'r' to restart", textColor);
+    this->textCache[TITLE] = this->textToTexture(GAME_NAME, TEXT_COLOR);
+    this->textCache[START] = this->textToTexture("'SPACE' to start", TEXT_COLOR);
+    this->textCache[WASD] = this->textToTexture("use 'WASD' to control", TEXT_COLOR);
+    this->textCache[QUIT_OR_RESTART] = this->textToTexture("'q' to quit, 'r' to restart", TEXT_COLOR);
 }
 
 TextureInfo *Font::getCache(CachedText cachedText) {
@@ -95,14 +91,14 @@ void Font::renderCounter(TextureInfo **textureInfo, std::string text, int data) 
     std::stringstream ss;
     ss << text << data;
     // Logger::LogInfo(ss.str().c_str());
-    *textureInfo = textToTexture(ss.str().c_str(), textColor);
+    *textureInfo = textToTexture(ss.str().c_str(), TEXT_COLOR);
 }
 
 void Font::renderMessage(TextureInfo **textureInfo, std::string text, int data) {
     std::stringstream ss;
     ss << text << data;
     // Logger::LogInfo(ss.str().c_str());
-    *textureInfo = textToTexture(ss.str().c_str(), textColor);
+    *textureInfo = textToTexture(ss.str().c_str(), TEXT_COLOR);
 }
 
 void Font::renderFPSCounter(TextureInfo **textureInfo, int fps) {
