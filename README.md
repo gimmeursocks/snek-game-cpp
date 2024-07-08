@@ -14,7 +14,7 @@ A simple snake game made in simple SDL2.
 
 1. Run: `mkdir release && cd release`
 2. Ensure `libfreetype-6.dll`, `SDL2_image.dll`, `SDL2_ttf.dll` & `SDL2.dll` are present in this directory.
-3. Copy `src` directory to `release`.
+3. Copy `src/assets` directory to `release`.
 4. Compile & run: `cd .. && make release && make rrun`.
 
 ## Local Build Dependencies
