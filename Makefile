@@ -11,7 +11,16 @@ OBJDIR = obj
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
 
-LIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+WIN_LIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+LINUX_LIBS = -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	LIBS = $(LINUX_LIBS)
+else
+	LIBS = $(WIN_LIBS)
+endif
+
 STATIC_LIBS = -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic
 
 .PHONY: release
