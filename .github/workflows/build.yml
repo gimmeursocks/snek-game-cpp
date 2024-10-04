@@ -20,7 +20,7 @@ jobs:
       - name: Setup SDL2 dependencies
         run: |
           apt-get update
-          apt-get install -y build-essential libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev
+          apt-get install -y build-essential cmake libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev
 
       - name: Create build directory
         run: |
