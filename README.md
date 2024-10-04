@@ -34,7 +34,7 @@ A simple snake game made using SDL2.
 
 3. Build the project:
     ```bash
-    make
+    mingw32-make
     ```
 
 4. Run the game:
