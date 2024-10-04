@@ -1,48 +1,50 @@
 # Snek 
 
-A simple snake game made in simple SDL2.
+A simple snake game made using SDL2.
 
 <img src="game.gif"/>
 
 ## Dependencies
 
-- make >= 3.8
-
-- gcc/g++ >= 13.1
-
-## Local Release Instructions
-
-1. Run: `mkdir release && cd release`
-2. Ensure `libfreetype-6.dll`, `SDL2_image.dll`, `SDL2_ttf.dll` & `SDL2.dll` are present in this directory.
-3. Copy `src/assets` directory to `release`.
-4. Compile & run: `cd .. && make release && make rrun`.
+- CMake >= 3.10
+- GCC/G++ >= 13.1
 
 ## Local Build Dependencies
 
-- MinGW-w64 
+- **MinGW-w64** 
+    - A suite of development tools installed through MSYS2. You can download it from [here](https://www.mingw-w64.org/downloads/#msys2).
 
-    - Suite of development tools, installed through MSYS2 from [here](https://www.mingw-w64.org/downloads/#msys2).
-
-- SDL2 >= 2.0
-
-  - Low level cross-platform development library, latest version found [here](https://github.com/libsdl-org/SDL/releases/latest).
-
-- SDL2_ttf >= 2.0
-
-  - Used to render fonts, latest version found [here](https://github.com/libsdl-org/SDL_ttf/releases/latest).
-
-- SDL2_image >= 2.0
-
-  - Used to load the icon, latest version found [here](https://github.com/libsdl-org/SDL_image/releases/latest).
-
-- (Optional) Freetype
-  
-  - Used to render fonts _needed by SDL_ttf_, installed through msys2 using commands found [here](https://packages.msys2.org/package/mingw-w64-x86_64-freetype?repo=mingw64).
+- **SDL2, SDL2_ttf, and SDL2_image**
+    - Install these libraries using the following command:
+      ```bash
+      pacman -S mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_image
+      ```
 
 ## Local Build Instructions
 
-1. Copy installed SDL2, SDL2_ttf & SDL2_image include directories into `src/include`.
-2. Copy SDL2, SDL2_ttf & SDL2_image lib directories in `src/lib`.
-3. Copy SDL2, SDL2_ttf & SDL2_image dll into main directory.
-4. Either install freetype or place `libfreetype-6.dll` in this directory.
-5. Compile & run: `make && make run`.
+1. Create a build directory and navigate into it:
+    ```bash
+    mkdir build && cd build
+    ```
+
+2. Configure the project using CMake:
+    ```bash
+    cmake -G "MinGW Makefiles" ..
+    ```
+
+3. Build the project:
+    ```bash
+    make
+    ```
+
+4. Run the game:
+    ```bash
+    ./snek
+    ```
+
+## Notes
+
+- Make sure to set the build type (e.g., Release or Debug) if needed:
+    ```bash
+    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+    ```

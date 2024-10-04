@@ -1,7 +1,4 @@
-obj/
-release/
-src/lib
-src/include/SDL2*
+build/
 src/assets/fonts
 
 *.dll
